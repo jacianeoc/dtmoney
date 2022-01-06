@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import {darken} from 'polished'
+import {darken, transparentize} from 'polished';
+
+
 export const Container = styled.form`
 
    h2{
@@ -50,32 +52,55 @@ export const TransactionTypeContainer = styled.div`
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
 
-    button{
-        height:4rem;
-        border: 1px solid #d7d7d7;
-        border-radius:0.25rem;
+   
+`;
 
-        background: transparent;
+interface RadioBoxProps{
+    
+    isActive: boolean;
+    activeColor: 'green' | 'red';
+}
+/**
+ * javascrit não consegue enxergar variaveis css
+ * por isso a necessidade de um obj com as respectivas cores
+ */
+const colors = {
+    green: '#33CC95',
+    red: '#E52E4D'
+}
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
+export const RadioBox = styled.button<RadioBoxProps>`
 
-        transition: border-color 0.2;
-        &:hover{
-            border-color: ${darken(0.1, '#d7d7d7')}
-        }
+    height:4rem;
+    border: 1px solid #d7d7d7;
+    border-radius:0.25rem;
 
-        img{
-            width: 28px;
-            height: 28px;
-        }
+    /** toda vez que passa uma função dentro de uma interpolação
+     * ela vai ser  chamada automaticamente pelo styled components
+     * passando todas as propriedades do component 
+     */
+    background: ${(props)=> props.isActive ?
+        transparentize(0.9, colors[props.activeColor])
+        : 'transparent'};
 
-        span{
-            display: inline-block;
-            margin-left: 1rem;
-            font-size: 1rem;
-            color: var(--titles);
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: border-color 0.2;
+
+    &:hover{
+        border-color: ${darken(0.1, '#d7d7d7')}
     }
+    img{
+        width: 28px;
+        height: 28px;
+    }
+    span{
+        display: inline-block;
+        margin-left: 1rem;
+        font-size: 1rem;
+        color: var(--titles);
+    }
+
 `;
