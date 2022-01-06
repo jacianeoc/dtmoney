@@ -1,12 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {createServer} from 'miragejs';
+import {createServer, Model} from 'miragejs';
 import {App} from './App';
 /**
  * routes -> quais são as rotas que tem na api ficticia
  */
 createServer({
+    models:{
+      transaction: Model
+    },
+    seeds(server){
+      server.db.loadData({
+        transactions: [
+          {
+            id: 1,
+            title: 'Freela',
+            category: 'dev',
+            type:'deposit',
+            amount:6000,
+            createdAt: new Date('2021-12-20 09:00:00')
+          },
+          {
+            id: 2,
+            title: 'compras',
+            category: 'mercado',
+            type:'withdraw',
+            amount:500,
+            createdAt: new Date('2021-12-20 09:00:00')
+          }
+        ]
+      })
+    },
     routes(){
       /**
        * a partir do endereço api que vai pegar todas as chamas que tenham 
@@ -17,16 +42,11 @@ createServer({
        * 
        */
       this.get('/transactions', ()=>{
-        return[
-          {
-            id: 1,
-            title: 'Transactions 1',
-            amount: 400, 
-            type: 'deposit',
-            category: 'food',
-            data: '20-12-2000'
-          }
-        ]
+        return this.schema.all('transaction')
+      })
+      this.post('/transactions', (shema, request) => {
+        const data = JSON.parse(request.requestBody)
+        return shema.create('transaction', data);
       })
     }
   }
