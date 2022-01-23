@@ -1,5 +1,5 @@
-import {createContext, ReactNode, useEffect, useState} from 'react';
-import { api } from './services/api';
+import {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+import { api } from '../services/api';
 
 interface Transaction {
     id: number;  
@@ -36,7 +36,7 @@ interface TransactionsContextData{
 /**
  * criando um constexto no react
  */
-export const TransactionsContext = createContext<TransactionsContextData>({} as TransactionsContextData);
+const TransactionsContext = createContext<TransactionsContextData>({} as TransactionsContextData);
 
 /**
  * para que o contexto seja acessivel a outros componentes
@@ -65,4 +65,12 @@ export function TransactionsProvider({children}:TransactionsProviderProps) {
         </TransactionsContext.Provider>
     );
 }
- 
+
+/**
+ * um hook no react sempre poderá utilizar da outros hooks
+ */
+export function useTransactions() {
+    const context = useContext(TransactionsContext);
+
+    return context;
+}
